@@ -55,6 +55,7 @@ function initGame() {
   document.getElementById('overlay').classList.add('hidden');
   addLog('Ready: flip any card to start the 60-second timer.', 'warn');
   addLog('Mirror i -> 39 - i, adjacent cards gain +20%.', 'warn');
+  addLog('Plan to avoid 3 consecutive mistakes — Hisoka will flip a revealed card.', 'warn');
 }
 
 function createMirroredDeck() {
@@ -152,6 +153,9 @@ function flipCard(card) {
 
   addLog(`✗ Mismatch: ${first.symbol} vs ${card.symbol}`, 'miss');
   const triggered = interference.registerMismatch();
+  if (!triggered && interference.consecutiveMismatches === interference.threshold - 1) {
+    addLog('⚠ One more mistake will trigger Hisoka\'s Nen.', 'warn');
+  }
   updateHUD();
 
   setTimeout(() => {
@@ -163,17 +167,30 @@ function flipCard(card) {
     if (triggered) {
       const disrupted = interference.triggerInterference(cards);
       if (disrupted) {
-        eraseRememberedPair(disrupted.symbol);
-        const positions = disrupted.cards.map(target => target.index).join(' & ');
-        addLog(`⚠ Hisoka's Nen erased ${disrupted.symbol} at indexes ${positions}.`, 'warn');
-        disrupted.cards.forEach(target => {
-          if (!target.element) return;
-          target.element.classList.add('interference');
-          setTimeout(() => {
-            target.element.classList.remove('interference');
-            updateCardElement(target);
-          }, 500);
-        });
+        if (disrupted.kind === 'flip-back') {
+          eraseRememberedPair(disrupted.symbol);
+          const positions = disrupted.cards.map(target => target.index).join(' & ');
+          addLog(`⚠ Hisoka's Nen flipped ${disrupted.symbol} back face-down at ${positions}.`, 'warn');
+          disrupted.cards.forEach(target => {
+            if (!target.element) return;
+            target.element.classList.add('interference');
+            setTimeout(() => {
+              target.element.classList.remove('interference');
+              updateCardElement(target);
+            }, 500);
+          });
+        } else if (disrupted.kind === 'glimpse') {
+          const target = disrupted.target;
+          addLog(`⚠ Hisoka's Nen flashed index ${target.index}. Memorize it before it fades.`, 'warn');
+          if (target.element) {
+            target.element.classList.add('interference');
+            target.element.innerHTML = `<div class="card-inner"><span class="card-index">${target.index}</span><span class="card-symbol">${target.symbol}</span></div>`;
+            setTimeout(() => {
+              target.element.classList.remove('interference');
+              updateCardElement(target);
+            }, 900);
+          }
+        }
         updateHUD();
       }
     }

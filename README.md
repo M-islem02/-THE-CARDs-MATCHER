@@ -37,15 +37,17 @@ card-matcher/
 - Best Move Suggestion button that highlights the highest-probability card.
 - Hunter Logs panel for gameplay events and strategy hints.
 - Hidden mirror pattern: card `i` is paired with card `39 - i`.
-- Nen interference after 3 consecutive mismatches.
+- Nen interference after 3 consecutive mismatches flips a random revealed card face-down (or flashes a hidden card if none is revealed yet).
+- A correct match resets the mismatch streak to zero.
+- On-screen planning warnings as the streak approaches the 3-mismatch threshold.
 
 ## Game Rules
 
 1. Flip two cards.
-2. If the symbols match, the pair stays revealed and the score increases by `+10`.
+2. If the symbols match, the pair stays revealed, the score increases by `+10`, and the mismatch streak resets to zero.
 3. If the symbols do not match, both cards flip back down.
 4. Finish all 20 pairs before the timer reaches `0`.
-5. Every 3 consecutive mismatches trigger Hisoka's Nen interference.
+5. Every 3 consecutive mismatches trigger Hisoka's Nen interference on a random revealed card. Plan to avoid reaching 3 in a row.
 
 ## Probability Engine
 
@@ -88,60 +90,65 @@ Board positions:
 
 ## Nen Memory Interference
 
-Hisoka's interference activates after 3 mismatches in a row.
+Hisoka's interference activates after 3 mismatches in a row. Plan your flips to avoid reaching this threshold.
 
-When it triggers:
+When it triggers and at least one card is face-up:
 
-- one completed pair is selected randomly
-- both cards in that pair flip back down
-- the remembered positions for that pair are erased from the game memory
+- one random revealed card is chosen
+- that card and its mirror partner are flipped back face-down
+- the remembered positions for that symbol are erased from the game memory
 - the player must rediscover the pair
 
-If the player makes a successful match before reaching 3 mismatches, the mismatch counter resets to zero.
+When it triggers and no card has been matched yet:
 
-## Hunter Logs — ماذا تعني كل جملة؟
+- one random face-down card is flashed briefly so the Nen effect is still visible
+- the card re-hides after a short moment — memorize it while you can
+
+If the player makes a successful match before reaching 3 mismatches, the mismatch counter resets to zero. Watch the Hunter Logs for the "one more mistake" warning when the streak reaches 2.
+
+## Hunter Logs — What Each Line Means
 
 > "Probability is not destiny. The 93% card still fails 7% of the time. Trust nothing."
 >
 > — Hisoka
 
-النسبة ليست ضماناً. `93%` تعني أن هناك `7%` احتمال خطأ. لا تثق بالنسب بشكل أعمى.
+The percentage is not a guarantee. A `93%` reading still carries a `7%` chance of being wrong. Never trust probabilities blindly.
 
 > "Adjacent cards share aura. Check neighbors. They are 20% more likely."
 >
 > — Killua
 
-البطاقات المجاورة لها `+20%` إضافية. إذا قلبت بطاقة في الموضع `10`، فالمواضع القريبة مثل `2, 3, 9, 11, 17, 18, 19` لها احتمال أعلى.
+Cards adjacent to the revealed one gain a `+20%` bonus. If you flip index `10`, neighbors like `2, 3, 9, 11, 17, 18, 19` are more likely matches.
 
 > "Hisoka's interference triggers after 3 mismatches. Plan flips in batches of 2."
 >
 > — Kurapika
 
-بعد `3` أخطاء متتالية يتدخل Hisoka ويقلب زوجاً مكشوفاً إلى الأسفل. إذا وجدت مطابقة قبل الخطأ الثالث، يعود العداد إلى الصفر. لذلك يجب أن تخطط لتجنب `3` أخطاء متتالية.
+After `3` consecutive mistakes, Hisoka flips a random revealed card back face-down. If no card is revealed yet, a random hidden card flashes briefly instead. A correct match before the third mistake resets the counter to zero — so plan to avoid `3` consecutive mistakes.
 
 > "The probability numbers lie sometimes. Watch for sudden drops."
 >
 > — Gon
 
-الاحتمالات تتغير بعد كل نقرة. إذا رأيت انخفاضاً مفاجئاً، فهذا يعني أن Hisoka يتلاعب بالأرقام.
+Probabilities recalculate on every flip. A sudden drop signals Hisoka's distortion is twisting the numbers under mismatch pressure.
 
 > "A perfect game is 20 moves."
 >
 > — Biscuit
 
-أفضل نتيجة من ناحية الاستراتيجية هي `20` مطابقة مباشرة. في واجهة اللعبة، عداد `MOVES` يحسب كل نقرة، لذلك الهدف العملي هو تقليل عدد النقرات قدر الإمكان.
+Strategically, the ideal is `20` clean matches. The `MOVES` counter increments on every flip, so the practical goal is to keep the move count as low as possible.
 
 > "The symbols aren't random. There's a hidden pattern."
 >
 > — Anonymous
 
-كل بطاقة `i` توأمها في الموضع `(39 - i)`. البطاقة `0` تقابل البطاقة `39`، والبطاقة `1` تقابل البطاقة `38`، وهكذا.
+Every card at index `i` is paired with the card at `(39 - i)`. Card `0` pairs with `39`, card `1` pairs with `38`, and so on.
 
 Examples:
 
-- `0 ↔ 39` زوايا معاكسة
+- `0 ↔ 39` opposite corners
 - `1 ↔ 38`
-- `19 ↔ 20` المنتصف
+- `19 ↔ 20` center of the board
 
 ## File Responsibilities
 

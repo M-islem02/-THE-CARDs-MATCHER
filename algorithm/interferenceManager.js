@@ -27,24 +27,36 @@ const interference = {
   },
 
   triggerInterference(cards) {
-    const matchedSymbols = [...new Set(
-      cards.filter(card => card.matched).map(card => card.symbol)
-    )];
+    const faceUp = cards.filter(card => card.matched);
 
-    if (matchedSymbols.length === 0) return null;
+    if (faceUp.length > 0) {
+      const target = faceUp[Math.floor(Math.random() * faceUp.length)];
+      const partner = cards[39 - target.index];
+      const affected = [target, partner].filter(Boolean);
 
-    const symbol = matchedSymbols[Math.floor(Math.random() * matchedSymbols.length)];
-    const disruptedCards = cards.filter(card => card.symbol === symbol && card.matched);
+      affected.forEach(card => {
+        card.matched = false;
+        card.revealed = false;
+        card.probability = null;
+      });
 
-    disruptedCards.forEach(card => {
-      card.matched = false;
-      card.revealed = false;
-      card.probability = null;
-    });
+      return {
+        kind: 'flip-back',
+        symbol: target.symbol,
+        target,
+        cards: affected
+      };
+    }
 
+    const hidden = cards.filter(card => !card.matched && !card.revealed);
+    if (hidden.length === 0) return null;
+
+    const glimpse = hidden[Math.floor(Math.random() * hidden.length)];
     return {
-      symbol,
-      cards: disruptedCards
+      kind: 'glimpse',
+      symbol: glimpse.symbol,
+      target: glimpse,
+      cards: [glimpse]
     };
   }
 };
