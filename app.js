@@ -53,9 +53,7 @@ function initGame() {
   clearInterval(timerInterval);
   timerInterval = setInterval(tick, 1000);
   document.getElementById('overlay').classList.add('hidden');
-  addLog('Game started: 40 cards, 60 seconds, trust nothing.', 'warn');
-  addLog('Mirror pattern active: index i is secretly linked to index 39 - i.', 'warn');
-  addLog('Killua note: adjacent cards around a reveal gain +20% probability.', 'warn');
+  addLog('Start: 40 cards, mirror i -> 39 - i, adjacent cards gain +20%.', 'warn');
 }
 
 function createMirroredDeck() {

@@ -47,36 +47,30 @@
     <div class="panel-box story-box">
       <div class="panel-title">CHALLENGE 01</div>
       <div class="story-text">
-        You enter the 67th floor of Greed Island's Central Tower. Hisoka waits in the shadows.
-        Forty cards hide twenty Nen-linked pairs, and every flip updates the board's probability field.
-        <br><br>
-        Finish before the 60-second timer expires. Miss three times in a row and Hisoka's interference drags a completed pair back into the dark.
+        40 cards. 20 Nen-linked pairs. Every flip updates the probability field.
+        Finish in 60 seconds before Hisoka's interference resets a completed pair.
       </div>
     </div>
 
-    <div class="panel-box">
+    <div class="panel-box controls-box">
       <div class="panel-title">// CONTROLS</div>
       <button class="green" onclick="initGame()">New Game</button>
       <button onclick="showHint()">Show Hint</button>
     </div>
 
-    <div class="panel-box">
+    <div class="panel-box rules-box">
       <div class="panel-title">// RULES</div>
       <div class="rules-text">
         Flip 2 cards<br>
         Match → +10 pts<br>
         3 mismatches → Hisoka resets a pair<br>
-        Probability updates after each flip<br>
-        Adjacent cards gain +20% aura<br>
-        Complete in 60s<br>
-        <br>
         <span class="good">Green % = high match</span><br>
         <span class="mid">Gold % = medium</span><br>
         <span class="bad">Red % = low</span>
       </div>
     </div>
 
-    <div class="panel-box">
+    <div class="panel-box logs-box">
       <div class="panel-title">// HUNTER LOGS</div>
       <div id="log-container"></div>
       <div class="quote-text">
