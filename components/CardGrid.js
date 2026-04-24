@@ -1,4 +1,3 @@
-// CardGrid.js — renders the 8x5 grid
 function renderCardGrid(cards, container) {
   container.innerHTML = '';
   container.style.display = 'grid';

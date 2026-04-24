@@ -1,6 +1,3 @@
-// interferenceManager.js
-// Manages Hisoka's Nen interference — 3 mismatches can erase a completed pair.
-
 const interference = {
   consecutiveMismatches: 0,
   threshold: 3,
@@ -14,7 +11,7 @@ const interference = {
     this.consecutiveMismatches++;
     if (this.consecutiveMismatches >= this.threshold) {
       this.consecutiveMismatches = 0;
-      return true; // trigger interference
+      return true;
     }
     return false;
   },
@@ -24,7 +21,6 @@ const interference = {
   },
 
   distortProbability(probability) {
-    // Distortion grows as player gets closer to interference trigger.
     const pressure = this.consecutiveMismatches / this.threshold;
     const swing = Math.round((Math.random() * 2 - 1) * this.maxDistortion * pressure);
     return probability + swing;

@@ -1,4 +1,3 @@
-// ProbabilityOverlay.js — updates probability display on cards
 function updateOverlay(cards) {
   cards.forEach(card => {
     if (!card.element || card.matched || card.revealed) return;

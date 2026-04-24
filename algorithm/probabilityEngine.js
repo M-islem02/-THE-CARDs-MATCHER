@@ -1,6 +1,3 @@
-// probabilityEngine.js
-// Calculates probability for each face-down card.
-
 function calculateProbabilities(cards, selectedCard, memoryState, interference) {
   const hidden = cards.filter(c => !c.matched && !c.revealed);
   const totalHidden = hidden.length;
@@ -14,11 +11,9 @@ function calculateProbabilities(cards, selectedCard, memoryState, interference) 
       return;
     }
 
-    // Baseline search probability among all hidden cards.
     let prob = Math.max(2, Math.round(100 / totalHidden));
 
     if (selectedCard) {
-      // Chance that this card is the pair of selectedCard.
       prob = Math.max(1, Math.round(100 / totalHidden));
 
       const knownPairIndex = knownSymbolToHiddenIndex[selectedCard.symbol];
@@ -35,7 +30,6 @@ function calculateProbabilities(cards, selectedCard, memoryState, interference) 
         prob += 15;
       }
     } else {
-      // No active selection: suggest likely useful first flips.
       if (memoryState && memoryState.unmatchedKnownIndexes && memoryState.unmatchedKnownIndexes.has(card.index)) {
         prob += 35;
       }
@@ -45,7 +39,6 @@ function calculateProbabilities(cards, selectedCard, memoryState, interference) 
       }
     }
 
-    // Hisoka distortion increases with mismatch pressure.
     if (interference && typeof interference.distortProbability === 'function') {
       prob = interference.distortProbability(prob);
     }

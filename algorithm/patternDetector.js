@@ -1,10 +1,4 @@
-// patternDetector.js
-// Detects hidden patterns in card arrangement
-
 function detectPattern(cards) {
-  // The hidden pattern: symbols are placed in mirrored pairs
-  // Each symbol's pair is reflected across the center of the grid
-  // Grid is 8x5 = 40 cards, center reflection: index i pairs with index (39 - i)
   const patterns = [];
 
   cards.forEach(card => {
