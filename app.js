@@ -89,7 +89,7 @@ function renderGrid() {
   cards.forEach(card => {
     const el = document.createElement('div');
     el.className = 'card face-down';
-    el.innerHTML = '<div class="card-inner"><span class="card-symbol">?</span></div>';
+    el.innerHTML = `<div class="card-inner"><span class="card-index">${card.index}</span><span class="card-symbol">?</span></div>`;
     el.addEventListener('click', () => flipCard(card));
     card.element = el;
   });
@@ -118,8 +118,9 @@ function flipCard(card) {
   if (!selected) {
     selected = card;
     card.element.classList.add('selected');
-    addLog(`Flip: revealed ${card.symbol} at position ${card.index + 1}.`, 'warn');
+    addLog(`Flip: revealed ${card.symbol} at index ${card.index}.`, 'warn');
     recalculateAndRenderProbabilities();
+    addAdjacentLog(card);
     addTopProbabilityLog();
     return;
   }
@@ -163,8 +164,8 @@ function flipCard(card) {
       const disrupted = interference.triggerInterference(cards);
       if (disrupted) {
         eraseRememberedPair(disrupted.symbol);
-        const positions = disrupted.cards.map(target => target.index + 1).join(' & ');
-        addLog(`⚠ Hisoka's Nen erased ${disrupted.symbol} at positions ${positions}.`, 'warn');
+        const positions = disrupted.cards.map(target => target.index).join(' & ');
+        addLog(`⚠ Hisoka's Nen erased ${disrupted.symbol} at indexes ${positions}.`, 'warn');
         disrupted.cards.forEach(target => {
           if (!target.element) return;
           target.element.classList.add('interference');
@@ -267,21 +268,27 @@ function updateCardElement(card) {
 
   if (card.matched) {
     el.classList.add('matched');
-    el.innerHTML = `<div class="card-inner"><span class="card-symbol">${card.symbol}</span></div>`;
+    el.innerHTML = `<div class="card-inner"><span class="card-index">${card.index}</span><span class="card-symbol">${card.symbol}</span></div>`;
     return;
   }
 
   if (card.revealed) {
     el.classList.add('revealed');
-    el.innerHTML = `<div class="card-inner"><span class="card-symbol">${card.symbol}</span></div>`;
+    if (selected === card) {
+      el.classList.add('selected');
+    }
+    el.innerHTML = `<div class="card-inner"><span class="card-index">${card.index}</span><span class="card-symbol">${card.symbol}</span></div>`;
     return;
   }
 
   el.classList.add('face-down');
+  if (selected && getAdjacentIndexes(selected.index).includes(card.index)) {
+    el.classList.add('aura');
+  }
   const prob = card.probability;
   const probClass = prob >= 60 ? 'high' : prob >= 30 ? 'mid' : 'low';
   const probText = prob !== null ? `<span class="card-prob ${probClass}">${prob}%</span>` : '';
-  el.innerHTML = `<div class="card-inner"><span class="card-symbol">?</span>${probText}</div>`;
+  el.innerHTML = `<div class="card-inner"><span class="card-index">${card.index}</span><span class="card-symbol">?</span>${probText}</div>`;
 }
 
 function updateHUD() {
@@ -318,16 +325,45 @@ function addTopProbabilityLog() {
     .filter(c => !c.matched && !c.revealed && c.probability !== null)
     .sort((a, b) => b.probability - a.probability)
     .slice(0, 6)
-    .map(c => `${c.index + 1}:${c.probability}%`)
+    .map(c => `${c.index}:${c.probability}%`)
     .join(' | ');
 
   if (top) {
     addLog(`Top probabilities: ${top}`, 'warn');
     const best = getBestMove(cards);
     if (best) {
-      addLog(`Best target now: position ${best.index + 1} at ${best.probability}%.`, 'warn');
+      addLog(`Best target now: index ${best.index} at ${best.probability}%.`, 'warn');
     }
   }
+}
+
+function addAdjacentLog(card) {
+  const adjacentIndexes = getAdjacentIndexes(card.index)
+    .filter(index => cards[index] && !cards[index].matched && !cards[index].revealed);
+
+  if (adjacentIndexes.length > 0) {
+    addLog(`Killua aura +20: check ${adjacentIndexes.join(', ')}.`, 'warn');
+  }
+}
+
+function getAdjacentIndexes(index) {
+  const row = Math.floor(index / 8);
+  const col = index % 8;
+  const indexes = [];
+
+  for (let rowOffset = -1; rowOffset <= 1; rowOffset += 1) {
+    for (let colOffset = -1; colOffset <= 1; colOffset += 1) {
+      if (rowOffset === 0 && colOffset === 0) continue;
+
+      const nextRow = row + rowOffset;
+      const nextCol = col + colOffset;
+      if (nextRow < 0 || nextRow >= 5 || nextCol < 0 || nextCol >= 8) continue;
+
+      indexes.push(nextRow * 8 + nextCol);
+    }
+  }
+
+  return indexes;
 }
 
 function showHint() {
@@ -343,7 +379,7 @@ function showHint() {
 
   activeHintCard = best;
   best.element.classList.add('hint');
-  addLog(`Hint: choose position ${best.index + 1} (${best.probability}%).`, 'warn');
+  addLog(`Hint: choose index ${best.index} (${best.probability}%).`, 'warn');
   setTimeout(() => {
     if (activeHintCard === best && best.element) {
       best.element.classList.remove('hint');
