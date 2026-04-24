@@ -39,11 +39,7 @@
 </header>
 
 <div id="game-area">
-  <div id="grid-container">
-    <div id="card-grid"></div>
-  </div>
-
-  <div id="side-panel">
+  <div id="left-panel" class="info-panel">
     <div class="panel-box story-box">
       <div class="panel-title">CHALLENGE 01</div>
       <div class="story-text">
@@ -57,7 +53,13 @@
       <button class="green" onclick="initGame()">New Game</button>
       <button onclick="showHint()">Show Hint</button>
     </div>
+  </div>
 
+  <div id="grid-container">
+    <div id="card-grid"></div>
+  </div>
+
+  <div id="right-panel" class="info-panel">
     <div class="panel-box rules-box">
       <div class="panel-title">// RULES</div>
       <div class="rules-text">

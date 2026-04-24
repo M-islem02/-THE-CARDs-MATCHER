@@ -99,29 +99,29 @@ header h1 {
 .dot.active { background: var(--accent-red); border-color: var(--accent-red); }
 
 #game-area {
-  display: flex;
+  display: grid;
+  grid-template-columns: 250px minmax(520px, 740px) 300px;
   align-items: center;
   justify-content: center;
   gap: 22px;
   height: calc(100vh - 82px);
   padding: 18px 24px;
   width: 100%;
-  max-width: 1160px;
+  max-width: 1360px;
   overflow: hidden;
 }
 
 #grid-container {
-  flex: 1;
   min-width: 0;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
 }
 
 #card-grid {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   gap: 7px;
-  width: min(740px, calc(100vw - 410px));
+  width: min(740px, calc(100vw - 640px));
   max-height: calc(100vh - 126px);
 }
 
@@ -213,13 +213,21 @@ header h1 {
 .card-prob.mid  { color: var(--accent-gold); }
 .card-prob.low  { color: var(--accent-red); }
 
-#side-panel {
-  width: 300px;
+.info-panel {
   height: min(662px, calc(100vh - 126px));
   display: grid;
-  grid-template-rows: auto auto auto minmax(0, 1fr);
   gap: 8px;
   overflow: hidden;
+}
+
+#left-panel {
+  width: 250px;
+  grid-template-rows: auto auto 1fr;
+}
+
+#right-panel {
+  width: 300px;
+  grid-template-rows: auto minmax(0, 1fr);
 }
 
 .panel-box {
@@ -296,13 +304,13 @@ button {
 button:last-child { margin-bottom: 0; }
 
 .controls-box button {
-  display: inline-block;
-  width: calc(50% - 4px);
-  margin-bottom: 0;
+  display: block;
+  width: 100%;
+  margin-bottom: 7px;
 }
 
 .controls-box button + button {
-  margin-left: 8px;
+  margin-left: 0;
 }
 
 #log-container {
@@ -372,11 +380,22 @@ button.green:hover { background: #d1ddd4; color: #244638; }
 
 @media (max-width: 960px) {
   #game-area {
-    flex-direction: column;
+    grid-template-columns: 1fr;
+    align-items: start;
+    overflow: auto;
   }
 
-  #side-panel {
+  body {
+    min-height: 100vh;
+    height: auto;
+    overflow: auto;
+  }
+
+  .info-panel,
+  #left-panel,
+  #right-panel {
     width: 100%;
+    height: auto;
   }
 }
 
