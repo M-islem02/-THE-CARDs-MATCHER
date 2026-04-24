@@ -10,20 +10,22 @@
   --bg-card-open: #e1dbcf;
   --bg-card-match: #ced9c4;
   --bg-selected: #e2d4aa;
-  --text-main: #2f2a24;
-  --text-soft: #5d574f;
+  --text-main: #18120d;
+  --text-soft: #43372d;
+  --text-contrast: #241b14;
   --border-soft: #9f9687;
-  --accent-gold: #8b7340;
-  --accent-green: #32725b;
-  --accent-red: #b04d44;
-  --accent-blue: #457290;
+  --accent-gold: #7a5717;
+  --accent-green: #225c48;
+  --accent-red: #972f2a;
+  --accent-blue: #2d5d85;
+  --accent-ember: #662016;
 }
 
 body {
   background: linear-gradient(180deg, #cac4b8 0%, var(--bg-main) 100%);
   color: var(--text-main);
   font-family: 'Rajdhani', sans-serif;
-  font-size: 21px;
+  font-size: 22px;
   line-height: 1.5;
   min-height: 100vh;
   display: flex;
@@ -46,8 +48,8 @@ header {
 
 header h1 {
   font-family: 'Share Tech Mono', monospace;
-  font-size: 30px;
-  color: var(--accent-gold);
+  font-size: 32px;
+  color: var(--accent-ember);
   letter-spacing: 1.5px;
 }
 
@@ -64,14 +66,14 @@ header h1 {
 
 .hud-label {
   font-size: 15px;
-  color: var(--text-soft);
+  color: var(--text-contrast);
   letter-spacing: 2px;
   display: block;
 }
 
 .hud-value {
   font-family: 'Share Tech Mono', monospace;
-  font-size: 34px;
+  font-size: 36px;
   color: var(--accent-green);
 }
 
@@ -133,7 +135,7 @@ header h1 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 26px;
+  font-size: 28px;
   border: 1px solid var(--border-soft);
   transition: all 0.3s;
   position: relative;
@@ -142,7 +144,7 @@ header h1 {
 .card.face-down .card-inner {
   background: var(--bg-card);
   border-color: #a79f8f;
-  color: #6a6357;
+  color: #504739;
 }
 
 .card.revealed .card-inner,
@@ -165,7 +167,8 @@ header h1 {
 
 .card.hint .card-inner {
   border-color: var(--accent-blue);
-  box-shadow: 0 0 12px rgba(69, 114, 144, 0.22);
+  box-shadow: 0 0 0 3px rgba(69, 114, 144, 0.24), 0 0 18px rgba(69, 114, 144, 0.35);
+  animation: hintPulse 0.9s ease-in-out infinite alternate;
 }
 
 .card.interference .card-inner {
@@ -180,7 +183,7 @@ header h1 {
 }
 
 .card-symbol {
-  font-size: 38px;
+  font-size: 40px;
   line-height: 1;
 }
 
@@ -188,7 +191,7 @@ header h1 {
   position: absolute;
   bottom: 7px;
   font-family: 'Share Tech Mono', monospace;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   letter-spacing: 0.3px;
   color: var(--accent-green);
@@ -200,7 +203,7 @@ header h1 {
 .card-prob.low  { color: var(--accent-red); }
 
 #side-panel {
-  width: 250px;
+  width: 300px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -215,7 +218,7 @@ header h1 {
 
 .panel-title {
   font-family: 'Share Tech Mono', monospace;
-  font-size: 14px;
+  font-size: 15px;
   color: var(--accent-gold);
   letter-spacing: 2px;
   margin-bottom: 10px;
@@ -224,9 +227,15 @@ header h1 {
 }
 
 .rules-text {
-  font-size: 18px;
-  color: var(--text-soft);
+  font-size: 19px;
+  color: var(--text-contrast);
   line-height: 1.8;
+}
+
+.story-text {
+  color: var(--text-contrast);
+  font-size: 18px;
+  line-height: 1.65;
 }
 
 .rules-text .good { color: var(--accent-green); }
@@ -234,8 +243,8 @@ header h1 {
 .rules-text .bad { color: var(--accent-red); }
 
 .log-item {
-  font-size: 16px;
-  color: var(--text-soft);
+  font-size: 17px;
+  color: var(--text-contrast);
   margin-bottom: 8px;
   line-height: 1.45;
   font-family: 'Share Tech Mono', monospace;
@@ -245,6 +254,15 @@ header h1 {
 .log-item.miss  { color: var(--accent-red); }
 .log-item.warn  { color: var(--accent-gold); }
 
+.quote-text {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #bbb19f;
+  color: var(--accent-ember);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
 button {
   width: 100%;
   padding: 12px;
@@ -253,7 +271,7 @@ button {
   color: var(--accent-gold);
   font-family: 'Rajdhani', sans-serif;
   font-weight: 600;
-  font-size: 19px;
+  font-size: 20px;
   letter-spacing: 1px;
   cursor: pointer;
   transition: all 0.15s;
@@ -289,23 +307,32 @@ button.green:hover { background: #d1ddd4; color: #244638; }
 
 .overlay-box h2 {
   font-family: 'Share Tech Mono', monospace;
-  font-size: 31px;
+  font-size: 32px;
   color: var(--accent-gold);
   margin-bottom: 16px;
 }
 
 .overlay-box p {
-  color: var(--text-soft);
+  color: var(--text-contrast);
   margin-bottom: 24px;
   line-height: 1.6;
-  font-size: 20px;
+  font-size: 21px;
 }
 
 .overlay-box .stat {
   font-family: 'Share Tech Mono', monospace;
   color: var(--accent-green);
-  font-size: 24px;
+  font-size: 25px;
   margin: 8px 0;
+}
+
+@keyframes hintPulse {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.05);
+  }
 }
 
 @media (max-width: 960px) {
@@ -320,7 +347,7 @@ button.green:hover { background: #d1ddd4; color: #244638; }
 
 @media (max-width: 720px) {
   body {
-    font-size: 18px;
+    font-size: 19px;
   }
 
   header {
@@ -328,7 +355,7 @@ button.green:hover { background: #d1ddd4; color: #244638; }
   }
 
   header h1 {
-    font-size: 24px;
+    font-size: 25px;
   }
 
   #hud {
@@ -336,7 +363,7 @@ button.green:hover { background: #d1ddd4; color: #244638; }
   }
 
   .hud-value {
-    font-size: 28px;
+    font-size: 30px;
   }
 
   #game-area {
@@ -348,10 +375,10 @@ button.green:hover { background: #d1ddd4; color: #244638; }
   }
 
   .card-symbol {
-    font-size: 31px;
+    font-size: 33px;
   }
 
   .card-prob {
-    font-size: 14px;
+    font-size: 15px;
   }
 }

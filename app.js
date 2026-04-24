@@ -55,6 +55,7 @@ function initGame() {
   document.getElementById('overlay').classList.add('hidden');
   addLog('Game started: 40 cards, 60 seconds, trust nothing.', 'warn');
   addLog('Mirror pattern active: index i is secretly linked to index 39 - i.', 'warn');
+  addLog('Killua note: adjacent cards around a reveal gain +20% probability.', 'warn');
 }
 
 function createMirroredDeck() {
@@ -158,14 +159,20 @@ function flipCard(card) {
     updateCardElement(card);
 
     if (triggered) {
-      const flipped = interference.triggerInterference(cards);
-      if (flipped) {
-        addLog("⚠ Hisoka's Nen! A remembered card was forced face-down.", 'warn');
-        flipped.element.classList.add('interference');
-        setTimeout(() => {
-          flipped.element.classList.remove('interference');
-          updateCardElement(flipped);
-        }, 500);
+      const disrupted = interference.triggerInterference(cards);
+      if (disrupted) {
+        eraseRememberedPair(disrupted.symbol);
+        const positions = disrupted.cards.map(target => target.index + 1).join(' & ');
+        addLog(`⚠ Hisoka's Nen erased ${disrupted.symbol} at positions ${positions}.`, 'warn');
+        disrupted.cards.forEach(target => {
+          if (!target.element) return;
+          target.element.classList.add('interference');
+          setTimeout(() => {
+            target.element.classList.remove('interference');
+            updateCardElement(target);
+          }, 500);
+        });
+        updateHUD();
       }
     }
 
@@ -215,6 +222,13 @@ function resolveMatchedIndexes(indexA, indexB) {
     memoryState.symbolToSeenIndexes[symbol] = memoryState.symbolToSeenIndexes[symbol]
       .filter(idx => idx !== indexA && idx !== indexB);
   });
+  updateKnownIndexSets();
+}
+
+function eraseRememberedPair(symbol) {
+  if (memoryState.symbolToSeenIndexes[symbol]) {
+    delete memoryState.symbolToSeenIndexes[symbol];
+  }
   updateKnownIndexSets();
 }
 

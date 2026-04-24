@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Greed Island: The Cards Matcher</title>
+<title>GREED ISLAND : THE CARDs MATCHER</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header>
-  <h1>GREED ISLAND: THE CARDS MATCHER</h1>
+  <h1>GREED ISLAND : THE CARDs MATCHER</h1>
   <div id="hud">
     <div class="hud-item">
       <span class="hud-label">SCORE</span>
@@ -44,6 +44,16 @@
   </div>
 
   <div id="side-panel">
+    <div class="panel-box story-box">
+      <div class="panel-title">CHALLENGE 01</div>
+      <div class="story-text">
+        You enter the 67th floor of Greed Island's Central Tower. Hisoka waits in the shadows.
+        Forty cards hide twenty Nen-linked pairs, and every flip updates the board's probability field.
+        <br><br>
+        Finish before the 60-second timer expires. Miss three times in a row and Hisoka's interference drags a completed pair back into the dark.
+      </div>
+    </div>
+
     <div class="panel-box">
       <div class="panel-title">// CONTROLS</div>
       <button class="green" onclick="initGame()">New Game</button>
@@ -55,7 +65,9 @@
       <div class="rules-text">
         Flip 2 cards<br>
         Match → +10 pts<br>
-        3 mismatches → Nen!<br>
+        3 mismatches → Hisoka resets a pair<br>
+        Probability updates after each flip<br>
+        Adjacent cards gain +20% aura<br>
         Complete in 60s<br>
         <br>
         <span class="good">Green % = high match</span><br>
@@ -67,6 +79,14 @@
     <div class="panel-box">
       <div class="panel-title">// HUNTER LOGS</div>
       <div id="log-container"></div>
+      <div class="quote-text">
+        <strong>Hisoka:</strong> 93% can still fail.<br>
+        <strong>Killua:</strong> Adjacent cards gain +20%.<br>
+        <strong>Kurapika:</strong> 3 misses trigger interference.<br>
+        <strong>Gon:</strong> Sudden drops mean distortion.<br>
+        <strong>Biscuit:</strong> Perfect play minimizes moves.<br>
+        <strong>Anonymous:</strong> Pair index = 39 - i.
+      </div>
     </div>
   </div>
 </div>

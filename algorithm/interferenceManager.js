@@ -1,5 +1,5 @@
 // interferenceManager.js
-// Manages Hisoka's Nen interference — 3 mismatches = flip a revealed card back
+// Manages Hisoka's Nen interference — 3 mismatches can erase a completed pair.
 
 const interference = {
   consecutiveMismatches: 0,
@@ -31,13 +31,24 @@ const interference = {
   },
 
   triggerInterference(cards) {
-    // find all revealed but not matched cards
-    const revealed = cards.filter(c => c.revealed && !c.matched);
-    if (revealed.length === 0) return null;
-    // pick random one
-    const target = revealed[Math.floor(Math.random() * revealed.length)];
-    target.revealed = false;
-    target.probability = null;
-    return target;
+    const matchedSymbols = [...new Set(
+      cards.filter(card => card.matched).map(card => card.symbol)
+    )];
+
+    if (matchedSymbols.length === 0) return null;
+
+    const symbol = matchedSymbols[Math.floor(Math.random() * matchedSymbols.length)];
+    const disruptedCards = cards.filter(card => card.symbol === symbol && card.matched);
+
+    disruptedCards.forEach(card => {
+      card.matched = false;
+      card.revealed = false;
+      card.probability = null;
+    });
+
+    return {
+      symbol,
+      cards: disruptedCards
+    };
   }
 };
