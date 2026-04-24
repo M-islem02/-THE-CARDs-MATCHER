@@ -10,6 +10,7 @@ let moves = 0;
 let timer = 60;
 let timerInterval = null;
 let gameActive = false;
+let timerStarted = false;
 let logs = [];
 let lockBoard = false;
 let activeHintCard = null;
@@ -37,6 +38,7 @@ function initGame() {
   moves = 0;
   timer = 60;
   gameActive = true;
+  timerStarted = false;
   lockBoard = false;
   logs = [];
   activeHintCard = null;
@@ -51,9 +53,10 @@ function initGame() {
   recalculateAndRenderProbabilities();
   updateHUD();
   clearInterval(timerInterval);
-  timerInterval = setInterval(tick, 1000);
+  timerInterval = null;
   document.getElementById('overlay').classList.add('hidden');
-  addLog('Start: 40 cards, mirror i -> 39 - i, adjacent cards gain +20%.', 'warn');
+  addLog('Ready: flip any card to start the 60-second timer.', 'warn');
+  addLog('Mirror i -> 39 - i, adjacent cards gain +20%.', 'warn');
 }
 
 function createMirroredDeck() {
@@ -73,7 +76,7 @@ function createMirroredDeck() {
 }
 
 function tick() {
-  if (!gameActive) return;
+  if (!gameActive || !timerStarted) return;
   timer -= 1;
   updateHUD();
   if (timer <= 0) {
@@ -105,6 +108,8 @@ function flipCard(card) {
   if (!gameActive || lockBoard) return;
   if (card.revealed || card.matched) return;
   if (selected === card) return;
+
+  startTimerOnFirstFlip();
 
   card.revealed = true;
   moves += 1;
@@ -177,6 +182,15 @@ function flipCard(card) {
     lockBoard = false;
     recalculateAndRenderProbabilities();
   }, 800);
+}
+
+function startTimerOnFirstFlip() {
+  if (timerStarted) return;
+
+  timerStarted = true;
+  clearInterval(timerInterval);
+  timerInterval = setInterval(tick, 1000);
+  addLog('Timer started. You have 60 seconds.', 'warn');
 }
 
 function rememberCard(card) {
@@ -342,6 +356,7 @@ function showHint() {
 
 function endGame(win) {
   gameActive = false;
+  timerStarted = false;
   lockBoard = true;
   clearInterval(timerInterval);
 
