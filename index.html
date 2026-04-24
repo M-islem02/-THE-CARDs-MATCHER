@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Greed Island: The Cards Matcher</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>GREED ISLAND: THE CARDS MATCHER</h1>
+  <div id="hud">
+    <div class="hud-item">
+      <span class="hud-label">SCORE</span>
+      <span class="hud-value" id="score-val">0</span>
+    </div>
+    <div class="hud-item">
+      <span class="hud-label">TIME</span>
+      <span class="hud-value" id="timer-val">60</span>
+    </div>
+    <div class="hud-item">
+      <span class="hud-label">MOVES</span>
+      <span class="hud-value" id="moves-val">0</span>
+    </div>
+    <div class="hud-item">
+      <span class="hud-label">PAIRS</span>
+      <span class="hud-value" id="pairs-val">0/20</span>
+    </div>
+    <div class="hud-item">
+      <span class="hud-label">NEN</span>
+      <div id="interference-bar">
+        <div class="dot" id="d1"></div>
+        <div class="dot" id="d2"></div>
+        <div class="dot" id="d3"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div id="game-area">
+  <div id="grid-container">
+    <div id="card-grid"></div>
+  </div>
+
+  <div id="side-panel">
+    <div class="panel-box">
+      <div class="panel-title">// CONTROLS</div>
+      <button class="green" onclick="initGame()">New Game</button>
+      <button onclick="showHint()">Show Hint</button>
+    </div>
+
+    <div class="panel-box">
+      <div class="panel-title">// RULES</div>
+      <div class="rules-text">
+        Flip 2 cards<br>
+        Match → +10 pts<br>
+        3 mismatches → Nen!<br>
+        Complete in 60s<br>
+        <br>
+        <span class="good">Green % = high match</span><br>
+        <span class="mid">Gold % = medium</span><br>
+        <span class="bad">Red % = low</span>
+      </div>
+    </div>
+
+    <div class="panel-box">
+      <div class="panel-title">// HUNTER LOGS</div>
+      <div id="log-container"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Overlay -->
+<div id="overlay" class="hidden">
+  <div class="overlay-box">
+    <h2 id="overlay-title">VICTORY</h2>
+    <p id="overlay-msg"></p>
+    <div class="stat" id="overlay-score"></div>
+    <div class="stat" id="overlay-moves"></div>
+    <br>
+    <button class="green" onclick="initGame()">Play Again</button>
+  </div>
+</div>
+
+<script src="algorithm/probabilityEngine.js"></script>
+<script src="algorithm/patternDetector.js"></script>
+<script src="algorithm/interferenceManager.js"></script>
+<script src="components/CardGrid.js"></script>
+<script src="components/ProbabilityOverlay.js"></script>
+<script src="components/ScorePanel.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
